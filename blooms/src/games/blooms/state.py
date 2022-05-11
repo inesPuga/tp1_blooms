@@ -8,6 +8,10 @@ from src.games.blooms.result import Connect4Result
 from src.games.state import State
 from src.games.blooms.player import Connect4Player
 from src.games.player import Player
+import colorama
+from colorama import Fore
+from colorama import init
+init(autoreset=True)
 
 
 class Connect4State(State):
@@ -109,10 +113,37 @@ class Connect4State(State):
 
     # print management board
     def print_board_x(self):
+        n=0
+        print('  0 1 2 3 4 5 6 7 8 9|10|11|12')
         for r in self.board_x:
+            print(n, end='')
+            n = n + 1
+            hexanterior = 1
             for c in r:
-                print(c, end=" ")
+                if c == '-':
+                    if hexanterior == 1:
+                        print(r'  ', end='')
+                        hexanterior = 1
+                    continue
+                else:
+
+                    print(fr'{Fore.RED}/{Fore.BLUE}{c}{Fore.RED}\ ', end='')
+                    hexanterior = 0
             print()
+            # print(c, end=" ")
+            hexanterior = 1
+            print(' ', end='')
+            for c in r:
+                if c == '-':
+                    if hexanterior == 1:
+                        print(r'  ', end='')
+                        hexanterior = 1
+                    continue
+                else:
+                    print(Fore.RED + r'\_/ ', end='')
+                    hexanterior = 0
+            print()
+
 
     # print interface board
     def print_board_01(self):
