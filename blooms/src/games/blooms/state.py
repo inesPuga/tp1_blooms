@@ -161,6 +161,50 @@ class Connect4State(State):
     def get_num_players(self):
         return 2
 
+    def directNeighbors(self, x, y):
+        hex_directions = [(0, -2), (-1, -1), (0, 2), (-1, 1), (1, 1), (1, -1)]
+        direct_neighbors = []
+        for list_item in hex_directions:
+            g = x + list_item[0]
+            z = y + list_item[1]
+            if self.board_01[g][z] == 0:
+                print("Valor fora do limite do tabuleiro")
+                continue
+
+            direct_neighbors.append((g, z))
+            print(f"({g},{z})")
+            print(self.board_01[g][z])
+            """
+            copy self.board_01, self.territory_board
+            if self.territory_board_01[g][z] == self.board_01[x][y]
+                self.territory_board_01[g][z]= -1 
+                check_neighbor(g,z)       
+            if self.territory_board_01[g][z] == 0:
+                #print("Valor fora do limite do tabuleiro")
+                continue
+            if self.territory_board_01[g][z] == -1:
+                continue
+            """
+        return direct_neighbors
+
+    def findNeighbors(self, x, y, number, visited=None):
+        if visited is None:
+            visited = set()
+        for list_item in self.directNeighbors(x, y):
+            g = list_item[0]
+            z = list_item[1]
+            # visit node if it’s new
+            if list_item not in visited:
+                visited.add(list_item)
+
+                # go recursively if the new node is green
+                if self.board_01[g][z] == number:
+                    self.findNeighbors(g, z, number, visited)
+
+        return visited
+
+
+
     def validate_action(self, action: Connect4Action) -> bool:
         pos = action
         x = pos.get_x()
@@ -198,14 +242,16 @@ class Connect4State(State):
         """
 
         # print(self.__player_to_play)
-
+        visited = self.findNeighbors(x, y, 2)
+        print(visited)
         # determine if there is a winner
         # IMPLEMENTAR
         # self.__has_winner = self.__check_winner(self.__player_to_play)
-
         # switch to next player
         self.__acting_player = 1 if self.__acting_player == 0 else 0
         self.__turns_count += 1
+
+
 
     """
     def __display_cell(self, row, col):
