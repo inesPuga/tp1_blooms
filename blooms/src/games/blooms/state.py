@@ -172,8 +172,8 @@ class Connect4State(State):
                 continue
 
             direct_neighbors.append((g, z))
-            print(f"({g},{z})")
-            print(self.board_01[g][z])
+            # print(f"({g},{z})")
+            # print(self.board_01[g][z])
             """
             copy self.board_01, self.territory_board
             if self.territory_board_01[g][z] == self.board_01[x][y]
@@ -242,6 +242,7 @@ class Connect4State(State):
         """
 
         # print(self.__player_to_play)
+        # falta ajustar o valor 2 para ser relativo ao jogador atual
         visited = self.findNeighbors(x, y, 2)
         print(visited)
         # determine if there is a winner
