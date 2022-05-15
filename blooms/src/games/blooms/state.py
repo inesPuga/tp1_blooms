@@ -3,6 +3,8 @@ from copy import deepcopy
 from typing import Optional
 
 from typing import Optional
+
+
 from src.games.blooms.action import Connect4Action
 from src.games.blooms.result import Connect4Result
 from src.games.state import State
@@ -167,10 +169,6 @@ class Connect4State(State):
         for list_item in hex_directions:
             g = x + list_item[0]
             z = y + list_item[1]
-            if self.board_01[g][z] == 0:
-                print("Valor fora do limite do tabuleiro")
-                continue
-
             direct_neighbors.append((g, z))
             # print(f"({g},{z})")
             # print(self.board_01[g][z])
@@ -194,7 +192,8 @@ class Connect4State(State):
             g = list_item[0]
             z = list_item[1]
             # visit node if it’s new
-            if list_item not in visited:
+
+            if list_item not in visited and self.board_01[g][z] != 1:
                 visited.add(list_item)
 
                 # go recursively if the new node is green
@@ -225,11 +224,13 @@ class Connect4State(State):
         if self.get_acting_player() == 0:
             self.board_x[x][y] = 2
             self.board_01[x][y] = 2
+            player = 2
 
         # colors for player 1
         if self.get_acting_player() == 1:
             self.board_x[x][y] = 3
             self.board_01[x][y] = 3
+            player = 3
 
         # pelo que entendi... isso dá get da coluna que o player selecionou para jogar
         # e dá update o board...e define essa coluna como jogada pelo player
@@ -243,12 +244,31 @@ class Connect4State(State):
 
         # print(self.__player_to_play)
         # falta ajustar o valor 2 para ser relativo ao jogador atual
-        visited = self.findNeighbors(x, y, 2)
+        visited = self.findNeighbors(x, y, player)
         print(visited)
+        count = 0
+        count2 = 0
+        """
+        visited
+        for list_item in visited:
+            count = count + 1
+            if self.board_01[list_item[0]][list_item[1]] == 0:
+                break
+            if self.board_01[list_item[0]][list_item[1]] == 1:
+                break
+            if self.board_01[list_item[0]][list_item[1]] == player:
+                count2 = count2 + 1
+
+        if count2 == count:
+            for list_item2 in visited:
+                if self.board_01[list_item2[0]][list_item2[1]] != player:
+                    self.board_01[list_item2[0]][list_item2[1]] = 1
+                    self.board_x[list_item2[0]][list_item2[1]] = " "
         # determine if there is a winner
         # IMPLEMENTAR
         # self.__has_winner = self.__check_winner(self.__player_to_play)
         # switch to next player
+        """
         self.__acting_player = 1 if self.__acting_player == 0 else 0
         self.__turns_count += 1
 
